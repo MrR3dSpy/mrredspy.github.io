@@ -3,28 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE TEST SITE</title>
+    <title>mrredspy | Profile</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: #1e293b; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 100%; border: 1px solid #334155; }
-        h1 { font-size: 24px; margin-bottom: 10px; color: #38bdf8; }
-        p { color: #94a3b8; font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
-        .links { display: flex; flex-direction: column; gap: 15px; }
-        .btn { background: #38bdf8; color: #0f172a; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.2s ease; }
-        .btn:hover { background: #0ea5e9; transform: translateY(-2px); }
-        .btn.secondary { background: transparent; color: #38bdf8; border: 2px solid #38bdf8; }
-        .btn.secondary:hover { background: rgba(56, 189, 248, 0.1); }
+        /* Общие стили в духе guns.lol */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a0b2e 0%, #05020a 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Главная карточка профиля */
+        .profile-card {
+            background: rgba(15, 7, 25, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(157, 78, 221, 0.1);
+        }
+
+        /* Аватарка с неоновым свечением */
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #9d4eded0;
+            box-shadow: 0 0 20px #9d4ede;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        /* Никнейм */
+        .nickname {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Подпись/Статус */
+        .bio {
+            font-size: 14px;
+            color: #b39ddb;
+            margin-bottom: 30px;
+        }
+
+        /* Контейнер для кнопок-ссылок */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Стильные интерактивные кнопки */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: rgba(157, 78, 221, 0.2);
+            border-color: #9d4ede;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Кастомный виджет Discord */
+        .discord-widget {
+            background: #5865F2;
+            border-radius: 14px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .discord-widget:hover {
+            transform: scale(1.02);
+        }
+
+        .discord-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .discord-icon {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        .discord-tag {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .discord-status {
+            font-size: 12px;
+            color: #e0e2ff;
+        }
+
+        .discord-btn {
+            background: #ffffff;
+            color: #5865F2;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .discord-btn:hover {
+            background: #f0f1ff;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>WELCOME TO THE TEST SITE!</h1>
-        <p>TEST</p>
+    <div class="profile-card">
+        <!-- Аватарка (по умолчанию стоит стандартный робот, можно заменить на любую ссылку) -->
+        <img class="avatar" src="https://robohash.org" alt="Avatar">
         
-        <div class="links">
-            
+        <h1 class="nickname">mrredspy</h1>
+        <p class="bio">Welcome to my space</p>
+
+        <!-- Твои кнопки-ссылки (можешь менять названия и адреса) -->
+        <div class="links-container">
+            <a href="https://github.com" target="_blank" class="btn">GitHub Project</a>
+            <a href="#" class="btn">My Steam</a>
+            <a href="#" class="btn">YouTube Channel</a>
+        </div>
+
+        <!-- Виджет Дискорда прямо как на пушках -->
+        <div class="discord-widget">
+            <div class="discord-info">
+                <!-- SVG иконка Дискорда -->
+                <svg class="discord-icon" viewBox="0 0 127.14 96.36">
+                    <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.95,54.65,1,77.53a105.6,105.6,0,0,0,32,16.15,77.7,77.7,0,0,0,6.85-11.11,68.42,68.42,0,0,1-10.75-5.13c.91-.66,1.8-1.34,2.65-2a75.58,75.58,0,0,0,70.71,0c.85.69,1.74,1.37,2.65,2a68.42,68.42,0,0,1-10.75,5.13,77.7,77.7,0,0,0,6.85,11.11,105.6,105.6,0,0,0,32-16.15C129.66,48.24,123.66,25.41,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+                </svg>
+                <div>
+                    <div class="discord-tag">mrredspy</div>
+                    <div class="discord-status">Active on Discord</div>
+                </div>
+            </div>
+            <!-- Кнопка при клике копирует ник в буфер обмена -->
+            <button class="discord-btn" onclick="navigator.clipboard.writeText('mrredspy'); alert('Ник скопирован!');">Copy</button>
         </div>
     </div>
 
