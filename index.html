@@ -3,236 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRREDSPY // INTERFACE</title>
+    <title>MRREDSPY // Winter Pixel Edition</title>
     <style>
-        /* Horizon Launcher Cyberpunk Design */
+        /* Шрифты и общие пиксельные стили */
+        @import url('https://googleapis.com');
+
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Consolas', 'Courier New', monospace;
+            user-select: none;
         }
 
         body {
-            background-color: #030207;
-            /* Генерация пиксельной неоновой сетки на чистом CSS */
-            background-image: 
-                linear-gradient(rgba(18, 10, 36, 0.3) 2px, transparent 2px),
-                linear-gradient(90deg, rgba(18, 10, 36, 0.3) 2px, transparent 2px),
-                radial-gradient(circle at center, #0e051b 0%, #020105 100%);
-            background-size: 32px 32px, 32px 32px, 100% 100%;
-            color: #00ffcc;
+            margin: 0;
+            padding: 0;
+            background-color: #0b111e;
+            color: #e0f2fe;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
+            height: 100vh;
         }
 
-        /* Эффект глитча и сканирования на фоне */
-        body::before {
-            content: " ";
-            display: block;
+        /* Задний фон: холст для снега */
+        #snowCanvas {
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 3px, 6px 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             pointer-events: none;
         }
 
-        /* Главный терминал лаунчера */
-        .launcher-panel {
+        /* Главный контейнер карточки */
+        .card {
             position: relative;
-            background: rgba(10, 6, 18, 0.9);
-            border: 2px solid #ff0055;
-            box-shadow: 0 0 30px rgba(255, 0, 85, 0.2), inset 0 0 15px rgba(255, 0, 85, 0.1);
-            width: 100%;
-            max-width: 460px;
-            padding: 40px 30px;
             z-index: 10;
+            width: 420px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 4px solid #38bdf8;
+            padding: 24px;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.2);
+            image-rendering: pixelated;
         }
 
-        /* Декоративные уголки лаунчера */
-        .launcher-panel::before {
+        /* Ледяные уголки карточки */
+        .card::before, .card::after {
             content: '';
             position: absolute;
-            top: -2px; left: -2px;
-            width: 20px; height: 20px;
-            border-top: 4px solid #00ffcc;
-            border-left: 4px solid #00ffcc;
+            width: 12px;
+            height: 12px;
+            background: #bae6fd;
         }
+        .card::before { top: -8px; left: -8px; box-shadow: 8px 0 #bae6fd, 0 8px #bae6fd; }
+        .card::after { bottom: -8px; right: -8px; box-shadow: -8px 0 #bae6fd, 0 -8px #bae6fd; }
 
-        .launcher-panel::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; right: -2px;
-            width: 20px; height: 20px;
-            border-bottom: 4px solid #00ffcc;
-            border-right: 4px solid #00ffcc;
-        }
-
-        /* Заголовок системы */
-        .header {
-            text-align: left;
-            border-bottom: 1px solid rgba(0, 255, 204, 0.2);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .system-status {
-            font-size: 11px;
-            color: #ff0055;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: blink 1.5s infinite;
+        .status {
+            color: #7dd3fc;
+            font-size: 8px;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px #0369a1;
         }
 
         .nickname {
-            font-size: 32px;
-            font-weight: 900;
+            font-size: 20px;
             color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-        }
-
-        /* Ссылки-модули */
-        .modules-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* STEAM МОДУЛЬ */
-        .steam-module {
-            display: block;
-            text-decoration: none;
-            background: rgba(26, 32, 46, 0.4);
-            border: 1px solid #101822;
-            padding: 20px;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .steam-module:hover {
-            background: rgba(102, 192, 244, 0.1);
-            border-color: #66c0f4;
-            box-shadow: 0 0 20px rgba(102, 192, 244, 0.3);
-            transform: scale(1.01);
-        }
-
-        .steam-module::before {
-            content: 'LAUNCH';
-            position: absolute;
-            right: 20px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 12px;
-            color: #66c0f4;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .steam-module:hover::before {
-            opacity: 1;
-        }
-
-        .module-title {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 24px;
+            text-align: center;
+            text-shadow: 3px 3px #0284c7;
             letter-spacing: 1px;
         }
 
-        .module-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #66c0f4;
-            text-shadow: 0 0 5px rgba(102, 192, 244, 0.3);
-        }
-
-        /* DISCORD МОДУЛЬ */
-        .discord-module {
-            background: rgba(88, 101, 242, 0.05);
-            border: 1px solid rgba(88, 101, 242, 0.2);
-            padding: 20px;
+        /* Поля данных */
+        .field {
+            background: #0f172a;
+            border: 2px solid #0284c7;
+            padding: 12px;
+            margin-bottom: 16px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
         }
 
-        .discord-module:hover {
-            border-color: #5865F2;
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.2);
+        .field-label {
+            font-size: 7px;
+            color: #7dd3fc;
         }
 
-        .discord-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #7289da;
-            text-shadow: 0 0 5px rgba(88, 101, 242, 0.3);
+        .field-value {
+            font-size: 11px;
+            color: #f1f5f9;
+        }
+
+        /* Кнопки */
+        .btn {
+            font-family: 'Press Start 2P', monospace;
+            background: #0284c7;
+            border: none;
+            border-bottom: 4px solid #0369a1;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 8px;
+            image-rendering: pixelated;
+        }
+
+        .btn:active {
+            border-bottom: 0;
+            margin-top: 4px;
+            margin-bottom: -4px;
+            background: #0369a1;
         }
 
         .copy-btn {
-            background: transparent;
-            border: 1px solid #5865F2;
-            color: #5865F2;
-            padding: 8px 16px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            font-size: 12px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        .copy-btn:hover {
-            background: #5865F2;
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(88, 101, 242, 0.5);
+        .tetris-trigger {
+            width: 100%;
+            padding: 12px;
+            background: #059669;
+            border-bottom: 4px solid #047857;
+            font-size: 10px;
+            margin-top: 10px;
+        }
+        .tetris-trigger:active { background: #047857; }
+
+        /* Музыкальный плеер снизу справа */
+        .audio-player {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #38bdf8;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 7px;
+            max-width: 250px;
         }
 
-        /* Анимация мигания */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .track-name {
+            color: #7dd3fc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+
+        /* Модальное окно Тетриса */
+        .tetris-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .tetris-container {
+            background: #1e293b;
+            border: 4px solid #38bdf8;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #tetrisCanvas {
+            background: #0f172a;
+            border: 2px solid #0284c7;
+        }
+
+        .tetris-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            font-size: 8px;
+            width: 100px;
+        }
+
+        .close-tetris {
+            margin-top: 15px;
+            background: #ef4444;
+            border-bottom: 4px solid #b91c1c;
+        }
+        .close-tetris:active { background: #b91c1c; }
     </style>
 </head>
 <body>
 
-    <div class="launcher-panel">
-        <div class="header">
-            <div>
-                <div class="system-status">● system online</div>
-                <h1 class="nickname">mrredspy</h1>
-            </div>
+    <!-- Пиксельный Снегопад -->
+    <canvas id="snowCanvas"></canvas>
+
+    <!-- Основная Карточка -->
+    <div class="card">
+        <div class="status">* SYSTEM: SNOW_ONLINE</div>
+        <div class="nickname">MRREDSPY</div>
+
+        <div class="field">
+            <span class="field-label">PROTOCOL // STEAM_ID</span>
+            <span class="field-value">mrredspy_</span>
         </div>
 
-        <div class="modules-list">
-            <!-- Steam Блок -->
-            <a href="https://steamcommunity.com/id/mrredspy_/" target="_blank" class="steam-module">
-                <div class="module-title">protocol // steam_id</div>
-                <div class="module-value">mrredspy_</div>
-            </a>
-
-            <!-- Discord Блок -->
-            <div class="discord-module">
-                <div>
-                    <div class="module-title">comms // discord</div>
-                    <div class="discord-value">mrredspy</div>
-                </div>
-                <button class="copy-btn" onclick="navigator.clipboard.writeText('mrredspy'); this.innerText='COPIED'; setTimeout(()=>this.innerText='COPY', 2000);">Copy</button>
-            </div>
+        <div class="field">
+            <span class="field-label">COMMS // DISCORD</span>
+            <span class="field-value">mrredspy</span>
+            <button class="btn copy-btn" onclick="copyDiscord()">COPY</button>
         </div>
+
+        <button class="btn tetris-trigger" onclick="openTetris()">PLAY MINI-TETRIS</button>
     </div>
 
-</body>
-</html>
+    <!-- Чилловый Музыкальный Плеер -->
+    <div class="audio-player">
+        <div class="track-name" id="trackName">🎵 Нажмите Play для музыки...</div>
+        <button class="btn" id="playStopBtn" onclick="toggleMusic()">PLAY</button>
+    </div>
+
+    <!-- Окно с Тетрисом -->
+    <div class="tetris-modal" id="tetrisModal">
+        <div class="tetris-container">
+            <canvas id="tetrisCanvas" width="200" height="400"></canvas>
+            <div class="tetris-info">
+                <div>
+                    <p>SCORE:</p>
+                    <p id="score">0</p>
+                </div>
+                <div>
+                    <p>Управление:</p>
+                    <p>← → Стрелки</p>
+                    <p>↑ Поворот</p>
+                    <p>↓ Вниз</p>
+                </div>
+            </div>
+        </div>
+        <button class="btn close-tetris" onclick="closeTetris()">CLOSE</button>
+    </div>
+
+    <script>
+        // --- 1. СКРИПТ КРУПНОПИКСЕЛЬНОГО СНЕГА ---
+        const canvas = document.getElementById('snowCanvas');
+        const ctx = canvas.getContext('2d');
+        let flakes = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createFlakes() {
+            flakes = [];
+            const count = Math.floor(window.innerWidth / 15);
+            for(let i=0; i<count; i++) {
+                flakes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 2, // Крупные квадратные пиксели
+                    speed: Math.random() * 1 + 0.5,
+                    velX: Math.random() * 0.5 - 0.25
+                });
+            }
+        }
+        createFlakes();
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#e0f2fe';
+            flakes.forEach(f => {
+                // Рисуем квадратные пиксельные снежинки
+                ctx.fillRect(Math.floor(f.x), Math.floor(f.y), Math.floor(f.size), Math.floor(f.size));
+                f.y += f.speed;
+                f.x += f.velX;
+                if (f.y > canvas.height) {
+                    f.y = -10;
+                    f.x = Math.random() * canvas.width;
+                }
+            });
+            requestAnimationFrame(drawSnow);
+        }
+        drawSnow();
+
+        // --- 2. МУЗЫКАЛЬНЫЙ ПЛЕЕР ---
+        // Используем безлицензионный чилловый фоновый трек (8-bit lofi)
+        const audio = new Audio('https://archive.org');
+        audio.loop = true;
+        let isPlaying = false;
+
+        function toggleMusic() {
+            const btn = document.getElementById('playStopBtn');
+            const trackText = document.getElementById('trackName');
+            
+            if(!isPlaying) {
+                audio.play().catch(e => console.log("Нужен клик по экрану для старта"));
+                btn.textContent = "STOP";
+                btn.style.background = "#ef4444";
+                btn.style.borderBottom = "4px solid #b91c1c";
+                trackText.textContent = "❄️ Lofi Winter Pixel Chiptune";
+                isPlaying = true;
+            } else {
+                audio.pause();
+                btn.textContent = "PLAY";
+                btn.style.background = "#0284c7";
+                btn.style.borderBottom = "4px solid #0369a1";
+                trackText.textContent = "🎵 Музыка на паузе";
+                isPlaying = false;
+            }
+        }
+
+        function copyDiscord() {
+            navigator.clipboard.writeText('mrredspy');
+            alert('Discord ID скопирован!');
+        }
+
+Используйте код с осторожностью.
+// --- 3. МИНИ-ТЕТРИС ---
+const tCanvas = document.getElementById('tetrisCanvas');
+const tCtx = tCanvas.getContext('2d');
+const ROW = 20, COL = 10, SQ = 20;
+let board = Array.from({length: ROW}, () => Array(COL).fill(0));
+let score = 0;
+let tetrisInterval;
+let currentPiece;
+const SHAPES = [
+[[1,1,1,1]], // I
+[[1,1,1],[0,1,0]], // T
+[[1,1,1],[1,0,0]], // L
+[[1,1,0],[0,1,1]], // Z
+[[1,1],[1,1]] // O
+];
+const COLORS = ['#38bdf8', '#a855f7', '#f97316', '#ef4444', '#eab308'];
+class Piece {
+constructor(shape, color) {
+this.shape = shape;
+this.color = color;
+this.x = 3;
+this.y = -this.shape.length;
+}
+draw() {
+this.shape.forEach((r, i) => r.forEach((v, j) => {
+if(v) {
+tCtx.fillStyle = this.color;
+tCtx.fillRect((this.x+j)*SQ, (this.y+i)*SQ, SQ-1, SQ-1);
+}
+}));
+}
+collision(nx, ny, ns = this.shape) {
+return ns.some((r, i) => r.some((v, j) => {
+if(!v) return false;
+let pX = nx + j, pY = ny + i;
+if(pX < 0 || pX >= COL || pY >= ROW) return true;
+if(pY >= 0 && board[pY][pX]) return true;
+return false;
+}));
+}
+moveDown() {
+if(!this.collision(this.x, this.y + 1)) { this.y++; }
+else { this.lock(); }
+}
+lock() {
+this.shape.forEach((r, i) => r.forEach((v, j) => {
+if(v && this.y+i >= 0) board[this.y+i][this.x+j] = this.color;
+}));
+// Очистка линий
+for(let r=0; r<ROW; r++) {
+if(board[r].every(v => v !== 0)) {
+board.splice(r, 1);
+board.unshift(Array(COL).fill(0));
+score += 10;
+document.getElementById('score').textContent = score;
+}
+}
+newRandomPiece();
+}
+}
+function newRandomPiece() {
+let r = Math.floor(Math.random()*SHAPES.length);
+currentPiece = new Piece(SHAPES[r], COLORS[r]);
+if(currentPiece.collision(currentPiece.x, currentPiece.y)) {
+alert("GAME OVER! Твой счет: " + score);
+board = Array.from({length: ROW}, () => Array(COL).fill(0));
+score = 0;
+document.getElementById('score').textContent = score;
+}
+}
+function drawBoard() {
+tCtx.clearRect(0,0,tCanvas.width,tCanvas.height);
+board.forEach((r, i) => r.forEach((v, j) => {
+if(v) { tCtx.fillStyle = v; tCtx.fillRect(jSQ, iSQ, SQ-1, SQ-1); }
+}));
+currentPiece.draw();
+}
+function updateTetris() {
+currentPiece.moveDown();
+drawBoard();
+}
+function openTetris() {
+document.getElementById('tetrisModal').style.display = 'flex';
+board = Array.from({length: ROW}, () => Array(COL).fill(0));
+score = 0;
+newRandomPiece();
+tetrisInterval = setInterval(updateTetris, 400);
+window.addEventListener('keydown', handleControls);
+}
+function closeTetris() {
+document.getElementById('tetrisModal').style.display = 'none';
+clearInterval(tetrisInterval);
+window.removeEventListener('keydown', handleControls);
+}
+function handleControls(e) {
+if(e.key === 'ArrowLeft' && !currentPiece.collision(currentPiece.x - 1, currentPiece.y)) currentPiece.x--;
+if(e.key === 'ArrowRight' && !currentPiece.collision(currentPiece.x + 1, currentPiece.y)) currentPiece.x++;
+if(e.key === 'ArrowDown') currentPiece.moveDown();
+if(e.key === 'ArrowUp') {
+let next = currentPiece.shape[0].map((_, c) => currentPiece.shape.map(r => r[c])).reverse();
+if(!currentPiece.collision(currentPiece.x, currentPiece.y, next)) currentPiece.shape = next;
+}
+drawBoard();
+}
